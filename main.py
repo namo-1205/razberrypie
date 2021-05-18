@@ -11,12 +11,10 @@ import json
 
 
 def confirm(a, bb):
-    z = 0
     for i in bb:
         for k in i['stocks']:
             if k['name'] == a:
-                return True, z
-        z = z + 1
+                return True, k['tray_id']
     return False, -1
 
 # Select your transport with a defined url endpoint
@@ -85,7 +83,7 @@ if tf == True:
 
     variables = {
         "object": {
-            "tray_id" : result['tray'][tray_id]['id'],
+            "tray_id" : tray_id,
             "name": name
         }
     }
@@ -107,7 +105,7 @@ else:
         "object": {
             "name": "너의 냉장고",
             "order_priority": 1,
-            "user_id": result['tray'][0]['user_id'],
+            "user_id": 1,
             "stocks": {
                 "data": [
                     {
