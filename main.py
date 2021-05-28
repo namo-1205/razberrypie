@@ -117,11 +117,7 @@ while True:
     result2 = response.json()
 
     # Execute the query on the transport
-    temperature = sensor_data.tem #온도
-    weight = sensor_data.wei #무게 센서 값
-    humidity = sensor_data.hum #습도
-    name = result2['name'] # 재고 이름 -
-    light = sensor_data.cds #조도센서
+    name = result2['name'] # 재고 이름
 
     insert = {}
     variables = {}
@@ -180,6 +176,11 @@ while True:
     con.commit()
 
     result = client.execute(query)
+
+    temperature = sensor_data.tem #온도
+    weight = sensor_data.wei #무게 센서 값
+    humidity = sensor_data.hum #습도
+    light = sensor_data.cds #조도센서
 
     for i in result['tray']:
         for k in i['stocks']:
