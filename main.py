@@ -109,10 +109,10 @@ while True:
     camera = Picamera()
     camera.start_preview(alpha=192)
     sleep(1)
-    camera.capture("./image.jpg")
+    camera.capture("/home/pi/Desktop/image.jpg")
     camera.stop_preview()
     url = "http://ec2-3-36-171-69.ap-northeast-2.compute.amazonaws.com/food"
-    files = {'file': open('./image.jpg', 'rb')}
+    files = {'file': open('/home/pi/Desktop/image.jpg', 'rb')}
     response = requests.post(url, files=files)
     result2 = response.json()
 
@@ -180,6 +180,54 @@ while True:
     con.commit()
 
     result = client.execute(query)
+
+    for i in result['tray']:
+        for k in i['stocks']:
+            if k['name'] == name:
+                inser = gql(
+                    """mutation ($object: stock_insert_input!) {
+                        insert_humidity_temperature_one(object: $object){
+                        stock_id
+                        humidity
+                        temperature
+                        created_at
+                      }
+                    }
+                    """
+                )
+
+                variables = {
+                    "object": {
+                        "stock_id": k[id],
+                        "humidity": humidity,
+                        "temperature": temperature,
+                        "created_at": k['created_at']
+                    }
+                }
+
+                re = client.execute(inser, variable_values=variables)
+
+                con.commit()
+
+                inser = gql(
+                    """mutation ($object: stock_insert_input!) {
+                        insert_weight_one(object: $object){
+                        stock_id
+                        created_at
+                        value
+                      }
+                    }
+                    """
+                )
+
+                variables = {
+                    "object": {
+                        "stock_id": k[id],
+                        "created_at": k['created_at'],
+                        "value": weight
+                    }
+                }
+
 
     for i in result['tray']:
         for k in i['stocks']:
