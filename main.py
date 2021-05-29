@@ -5,14 +5,6 @@ from upload_file import upload_file
 from picamera import PiCamera
 from serial_sensor import info_from_sensor
 
-def confirm(a, bb):
-    for i in bb:
-        for k in i['stocks']:
-            if k['name'] == a:
-                return True, k['tray_id']
-    return False, -1
-
-op = 0
 camera = PiCamera()
 camera.start_preview()
 is_prev_light = True
