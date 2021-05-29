@@ -1,7 +1,3 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
 from gql import gql, Client
 from gql.transport.aiohttp import AIOHTTPTransport
@@ -27,26 +23,22 @@ class sensor:
         self.tem = tem
 
 try:
-    ser = serial.Serial( port='COM4', baudrate=9600 )
+    ser = serial.Serial( port='/dev/ttyACM0', baudrate=9600 )
 except:
     ser.close()
-    ser = serial.Serial( port='COM4', baudrate=9600 )
+    ser = serial.Serial( port='/dev/ttyACM0', baudrate=9600 )
 
 sensor_data = sensor(0, 0, 0, 0)
 
-op = 0;
+op = 0
+camera = PiCamera()
+camera.start_preview()
+is_prev_light = True
 
 while True:
     if ser.readable():
         res = ser.readline()
-        char = res.decode()[:len(res)-2] #개행문자제거
-
-        '''
-        serial.print( ,1) 모든 숫자는 소수점 1자리 가정. 
-        아두이노 측 출력 예시
-        Serial.print("wei: "); 출력문자는 공백 포함 5자
-        Serial.print(scale.get_units()*45, 1);
-        '''
+        char = res.decode()[:len(res)-2]
 
         if char[:5] == 'Wei: ':
             wei = float(char[5:])
@@ -57,6 +49,16 @@ while True:
             cds = float(char[5:])
             sensor_data.cds = cds
             print('CDS_Sensor: ', cds)
+
+            if cds < 700 and is_prev_light == False: 
+                camera.start_preview()
+                camera.capture('/home/pi/Pictures/capture.jpg')
+                is_prev_light = True
+            elif cds < 700 and is_prev_light == True: 
+             camera.capture('/home/pi/Pictures/capture.jpg')
+            elif cds > 700 and is_prev_light == True: 
+                camera.stop_preview()
+                is_prev_light = False 
 
         elif char[:5] == "Hum: ":
             hum = float(char[5:])
@@ -71,10 +73,8 @@ while True:
         else:
             print("known", char[5:])
 
-# Select your transport with a defined url endpoint
     transport = AIOHTTPTransport(url="http://ec2-3-36-171-69.ap-northeast-2.compute.amazonaws.com:8080/v1/graphql")
 
-    # Create a GraphQL client using the defined transport
     client = Client(transport=transport, fetch_schema_from_transport=True)
 
     con = sqlite3.connect('./test.db')
@@ -103,16 +103,10 @@ while True:
         }
         '''
     )
-
     result = client.execute(query)
 
-    camera = Picamera()
-    camera.start_preview(alpha=192)
-    sleep(1)
-    camera.capture("/home/pi/Desktop/image.jpg")
-    camera.stop_preview()
     url = "http://ec2-3-36-171-69.ap-northeast-2.compute.amazonaws.com/food"
-    files = {'file': open('/home/pi/Desktop/image.jpg', 'rb')}
+    files = {'file': open('/home/pi/Pictures/capture.jpg', 'rb')}
     response = requests.post(url, files=files)
     result2 = response.json()
 
@@ -162,7 +156,7 @@ while True:
 
         variables = {
             "object": {
-                "name": "너의 냉장고",
+                "name": "your refridgerator",
                 "order_priority": 1,
                 "user_id": 1,
                 "stocks": {
