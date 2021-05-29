@@ -1,4 +1,5 @@
 import serial
+ser = None
 try:
   ser = serial.Serial( port='/dev/ttyACM0', baudrate=9600 )
 except:
