@@ -22,8 +22,6 @@ while True:
         new_stock_info(tray_id, stock_name)
     else:
         new_tray(stock_name)
-
-    con.commit() #이것이 왜 존재하는지
     (sensor_data, current_light) = info_from_sensor(camera, is_prev_light)
 
     insert_sensor_info(stock_name, sensor_data)
