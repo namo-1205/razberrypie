@@ -2,34 +2,34 @@ import serial
 
 class sensor:
     def __init__(self, wei, csd, hum, tem):
-        self.wei = wei
+        self.weight = wei
         self.csd = csd
-        self.hem = hum
-        self.tem = tem
+        self.humidity = hum
+        self.temperature = tem
 
 try:
-    ser = serial.Serial( port='COM4', baudrate=9600 )
+    serial = serial_channel.Serial( port='COM4', baudrate=9600 )
 except:
-    ser.close()
-    ser = serial.Serial( port='COM4', baudrate=9600 )
+    serial_channel.close()
+    serial = serial_channel.Serial( port='COM4', baudrate=9600 )
 
 sensor_data = sensor(0, 0, 0, 0)    
     
 while True:
-    if ser.readable():
-        res = ser.readline()
+    if serial_channel.readable():
+        res = serial_channel.readline()
         char = res.decode()[:len(res)-2] #개행문자제거
 
         '''
-        serial.print( ,1) 모든 숫자는 소수점 1자리 가정. 
+        serial_channel.print( ,1) 모든 숫자는 소수점 1자리 가정. 
         아두이노 측 출력 예시
-        Serial.print("wei: "); 출력문자는 공백 포함 5자
-        Serial.print(scale.get_units()*45, 1);
+        serial_channel.print("wei: "); 출력문자는 공백 포함 5자
+        serial_channel.print(scale.get_units()*45, 1);
         '''
         
         if char[:5] == 'Wei: ':
             wei = float(char[5:])
-            sensor_data.wei = wei
+            sensor_data.weight = wei
             print('weight: ', wei )
             
         elif char[:5] == 'CDS: ':
@@ -39,12 +39,12 @@ while True:
             
         elif char[:5] == "Hum: ":
             hum = float(char[5:])
-            sensor_data.hum = hum
+            sensor_data.humidity = hum
             #print("Humidity: ", hum)
             
         elif char[:5] == "Tem: ":
             tem = float(char[5:])
-            sensor_data.tem = tem
+            sensor_data.temperature = tem
             #print("Temperature: ", tem)
         
         else:

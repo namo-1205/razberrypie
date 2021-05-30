@@ -1,27 +1,27 @@
 import serial
-ser = None
+serial_channel = None
 try:
-  ser = serial.Serial( port='/dev/ttyACM0', baudrate=9600 )
+  serial_channel = serial.Serial( port='/dev/ttyACM0', baudrate=9600 )
 except:
-  ser.close()
-  ser = serial.Serial( port='/dev/ttyACM0', baudrate=9600 )
+  serial.close()
+  serial_channel = serial.Serial( port='/dev/ttyACM0', baudrate=9600 )
 
 class sensor:
-  def __init__(self, wei, csd, hum, tem):
-    self.wei = wei
+  def __init__(self, weight, csd, humidity, temperature):
+    self.weight = weight
     self.csd = csd
-    self.hem = hum
-    self.tem = tem
+    self.humidity = humidity
+    self.temperature = temperature
 
 def info_from_sensor(camera, is_prev_light):
   sensor_data = sensor(0, 0, 0, 0)
-  if ser.readable():
-    res = ser.readline()
+  if serial_channel.readable():
+    res = serial_channel.readline()
     char = res.decode()[:len(res)-2]
     if char[:5] == 'Wei: ':
-      wei = float(char[5:])
-      print('weight: ', wei )
-      sensor_data.wei = wei
+      weight = float(char[5:])
+      print('Weight: ', weight )
+      sensor_data.weight = weight
     elif char[:5] == 'CDS: ':
       cds = float(char[5:])
       sensor_data.cds = cds
@@ -37,14 +37,14 @@ def info_from_sensor(camera, is_prev_light):
         is_prev_light = False 
 
     elif char[:5] == "Hum: ":
-      hum = float(char[5:])
-      sensor_data.hum = hum
-      print("Humidity: ", hum)
+      humidity = float(char[5:])
+      sensor_data.humidity = humidity
+      print("Humidity: ", humidity)
 
     elif char[:5] == "Tem: ":
-      tem = float(char[5:])
-      sensor_data.tem = tem
-      print("Temperature: ", tem)
+      temperature = float(char[5:])
+      sensor_data.temperature = temperature
+      print("Temperature: ", temperature)
     else:
       print("known", char[5:])
   return (sensor_data, is_prev_light)
