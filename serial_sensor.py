@@ -13,18 +13,19 @@ class sensor:
     self.hem = hum
     self.tem = tem
 
+_sensor_data = sensor(0, 0, 0, 0)
+
 def info_from_sensor(camera, is_prev_light):
-  sensor_data = sensor(0, 0, 0, 0)
   if ser.readable():
     res = ser.readline()
     char = res.decode()[:len(res)-2]
     if char[:5] == 'Wei: ':
       wei = float(char[5:])
       print('weight: ', wei )
-      sensor_data.wei = wei
+      _sensor_data.wei = wei
     elif char[:5] == 'CDS: ':
       cds = float(char[5:])
-      sensor_data.cds = cds
+      _sensor_data.cds = cds
       print('CDS_Sensor: ', cds)
       if cds < 700 and is_prev_light == False: 
         camera.start_preview()
@@ -38,13 +39,13 @@ def info_from_sensor(camera, is_prev_light):
 
     elif char[:5] == "Hum: ":
       hum = float(char[5:])
-      sensor_data.hum = hum
+      _sensor_data.hum = hum
       print("Humidity: ", hum)
 
     elif char[:5] == "Tem: ":
       tem = float(char[5:])
-      sensor_data.tem = tem
+      _sensor_data.tem = tem
       print("Temperature: ", tem)
     else:
       print("known", char[5:])
-  return (sensor_data, is_prev_light)
+  return (_sensor_data, is_prev_light)
