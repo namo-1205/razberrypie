@@ -105,12 +105,12 @@ def insert_sensor_info(stock_name, sensor_data):
     client.execute(mutation, variable_values={
       "humdityTemperature": {
           "stock_id": stock_id,
-          "humidity": sensor_data.hum,
-          "temperature": sensor_data.tem
+          "humidity": sensor_data.humadity,
+          "temperature": sensor_data.temperature
       },
       "weight": {
         "stock_id": stock_id,
-        "value": sensor_data.wei
+        "value": sensor_data.weight
       }
     })
   
