@@ -27,7 +27,7 @@ while True:
 
     (sensor_data, current_light) = info_from_sensor(camera, is_prev_light)
 
-    if datetime1.minute - datetime2.minute > 5:
+    if datetime1.minute - datetime2.minute >= 5:
         insert_sensor_info(stock_name, sensor_data)
         datetime1 = datetime.now()
 
