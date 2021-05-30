@@ -4,7 +4,7 @@ from gql.transport.aiohttp import AIOHTTPTransport
 transport = AIOHTTPTransport(url="http://ec2-3-36-171-69.ap-northeast-2.compute.amazonaws.com:8080/v1/graphql")
 client = Client(transport=transport, fetch_schema_from_transport=True)
 
-def is_stock_exist(stock_name):
+def receive_tray_id(stock_name):
   query = gql('''query($stockName: String!){
     stock(where: {name: {_eq: $stockName}}, order_by: {id: desc}, limit: 1){
       created_at
@@ -16,8 +16,8 @@ def is_stock_exist(stock_name):
   result = client.execute(query, variable_values={
     "stockName": stock_name
   })
-  is_stock_exist = len(result['stock']) > 0
-  return (is_stock_exist, result['stock'][0]['tray_id'] if is_stock_exist else None)
+
+  return (result['stock'][0]['tray_id'])
 
 def new_stock_info(tray_id, name):
   query = gql("""mutation ($object: stock_insert_input!) {
@@ -31,30 +31,6 @@ def new_stock_info(tray_id, name):
     "object": {
       "tray_id" : tray_id,
       "name": name
-    }
-  })
-
-def new_tray(name):
-  query = gql("""mutation ($object: tray_insert_input!) {
-      insert_tray_one(object: $object){
-      id
-      stocks{
-        id
-      }
-    }
-  }""")
-  client.execute(query, variable_values={
-    "object": {
-      "name": "your refridgerator",
-      "order_priority": 1,
-      "user_id": 1,
-      "stocks": {
-        "data": [
-          {
-              "name": name
-          }
-        ]
-      }
     }
   })
 
@@ -74,6 +50,7 @@ def fetch_tray_info():
     }
   }''')
   return client.execute(query)
+
 def insert_sensor_info(stock_name, sensor_data):
   query = gql('''query($stockName: String!){
     stock(where: {name: {_eq: $stockName}}, order_by: {id: desc}, limit: 1){

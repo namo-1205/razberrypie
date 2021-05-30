@@ -47,4 +47,10 @@ def info_from_sensor(camera, is_prev_light):
       print("Temperature: ", tem)
     else:
       print("known", char[5:])
+<<<<<<< Updated upstream
   return (sensor_data, is_prev_light)
+=======
+  return (_sensor_data, is_prev_light)
+
+
+>>>>>>> Stashed changes
