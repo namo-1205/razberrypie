@@ -8,10 +8,10 @@ class sensor:
         self.temperature = tem
 
 try:
-    serial = serial_channel.Serial( port='COM4', baudrate=9600 )
+    serial_channel = serial.Serial( port='COM4', baudrate=9600 )
 except:
-    serial_channel.close()
-    serial = serial_channel.Serial( port='COM4', baudrate=9600 )
+    serial.close()
+    serial_channel = serial.Serial( port='COM4', baudrate=9600 )
 
 sensor_data = sensor(0, 0, 0, 0)    
     
