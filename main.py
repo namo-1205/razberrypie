@@ -1,6 +1,6 @@
 
-from graphql import is_stock_exist, new_stock_info, new_tray, insert_sensor_info
-from sqlite_file import con, cache_stock_info, get_stocks_cached, fetch_tray_info
+from graphql import is_stock_exist, new_stock_info, insert_sensor_info, fetch_tray_info
+from sqlite_file import con, cache_stock_info, get_stocks_cached
 from upload_file import upload_file
 from picamera import PiCamera
 from serial_sensor import info_from_sensor
@@ -18,10 +18,9 @@ while True:
     (is_stock_exist, tray_id) = is_stock_exist(stock_name)
 
     # Execute the query on the transport
-    if is_stock_exist == True:
-        new_stock_info(tray_id, stock_name)
-    else:
-        new_tray(stock_name)
+
+    new_stock_info(tray_id, stock_name)
+
     (sensor_data, current_light) = info_from_sensor(camera, is_prev_light)
 
     insert_sensor_info(stock_name, sensor_data)
