@@ -62,7 +62,7 @@ def insert_stock_with_sensor_info(stock_name, tray_id, sensor_data):
       "humidity_temperatures": {
         "data": {
           "humidity": sensor_data.humidity,
-          "temperature": sensor_data.temperature
+          "temperature": sensor_data.temperature + 273
         }
       },
       "weights":{
@@ -90,7 +90,7 @@ def insert_sensor_info(stock_id, sensor_data):
     "humdityTemperature": {
         "stock_id": stock_id,
         "humidity": sensor_data.humidity,
-        "temperature": sensor_data.temperature
+        "temperature": sensor_data.temperature + 273
     },
     "weight": {
       "stock_id": stock_id,
