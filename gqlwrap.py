@@ -73,7 +73,7 @@ def insert_stock_with_sensor_info(stock_name, tray_id, sensor_data):
     }
   })
 def insert_sensor_info(stock_id, sensor_data):
-  mutation=gql("""mutation ($humdityTemperature: humidity_temperature_insert_input!, $weight: weight_insert_input) {
+  mutation=gql("""mutation ($humdityTemperature: humidity_temperature_insert_input!, $weight: weight_insert_input!) {
     insert_humidity_temperature_one(object: $humdityTemperature){
       stock_id
       humidity
