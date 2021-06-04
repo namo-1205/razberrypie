@@ -15,7 +15,7 @@ tray_id = 1
 while True:
     now = datetime.now()
     (sensor_data, current_light) = info_from_sensor(camera, is_prev_light)
-    if now.minute - initial_time.minute >= 5:
+    if (now - initial_time).total_seconds() >= 300:
         upload_result = upload_file()
 
         # Execute the query on the transport
