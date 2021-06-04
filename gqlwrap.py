@@ -17,7 +17,7 @@ def receive_tray_id(stock_name):
     "stockName": stock_name
   })
 
-  return result['stock'][0]['tray_id']
+  return result['stock'][0]['tray_id'] if len(result['stock']) > 0 else None
 
 def new_stock_info(tray_id, name):
   query = gql("""mutation ($object: stock_insert_input!) {
