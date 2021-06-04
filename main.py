@@ -1,5 +1,5 @@
 from datetime import datetime
-from gqlwrap import last_stock, new_stock_info, insert_stock_with_sensor_info, fetch_tray_info
+from gqlwrap import last_stock, insert_sensor_info, insert_stock_with_sensor_info, fetch_tray_info
 from sqlite_file import con, cache_stock_info, get_stocks_cached
 from upload_file import upload_file
 from picamera import PiCamera
@@ -23,10 +23,9 @@ while True:
 
         last_stock = last_stock(tray_id)
         if last_stock['name'] != stock_name:
-            stock_id = new_stock_info(tray_id, stock_name)
-            insert_stock_with_sensor_info(tray_id, sensor_data)
+            insert_stock_with_sensor_info(stock_name, tray_id, sensor_data)
         else:
-            insert_sensor_info(stock_name, sensor_data)
+            insert_sensor_info(last_stock['id'], sensor_data)
         initial_time = datetime.now()
 
         result = fetch_tray_info()

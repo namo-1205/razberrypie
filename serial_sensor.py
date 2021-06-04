@@ -7,10 +7,10 @@ except:
   serial_sensor = serial.Serial( port='/dev/ttyACM0', baudrate=9600 )
 
 class sensor:
-  def __init__(self, weightght, cds, humadity, temperature):
+  def __init__(self, weightght, cds, humidity, temperature):
     self.weight = weightght
     self.cds = cds
-    self.humadity = humadity
+    self.humidity = humidity
     self.temperature = temperature
 
 _sensor_data = sensor(0, 0, 0, 0)
@@ -38,9 +38,9 @@ def info_from_sensor(camera, is_prev_light):
         is_prev_light = False 
 
     elif char[:5] == "Hum: ":
-      humadity = float(char[5:])
-      _sensor_data.humadity = humadity
-      print("Humidity: ", humadity)
+      humidity = float(char[5:])
+      _sensor_data.humidity = humidity
+      print("Humidity: ", humidity)
 
     elif char[:5] == "Tem: ":
       temperature = float(char[5:])
