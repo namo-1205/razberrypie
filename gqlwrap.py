@@ -56,7 +56,7 @@ def insert_stock_with_sensor_info(stock_name, tray_id, sensor_data):
     }
   }""")
   client.execute(mutation, variable_values={
-    "object": {
+    "stock": {
       "tray_id": tray_id,
       "name": stock_name,
       "humidity_temperatures": {
