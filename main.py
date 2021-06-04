@@ -1,5 +1,5 @@
 from datetime import datetime
-from graphql import receive_tray_id, new_stock_info, insert_sensor_info, fetch_tray_info
+from gqlwrap import receive_tray_id, new_stock_info, insert_sensor_info, fetch_tray_info
 from sqlite_file import con, cache_stock_info, get_stocks_cached
 from upload_file import upload_file
 from picamera import PiCamera
