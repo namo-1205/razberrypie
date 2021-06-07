@@ -1,19 +1,20 @@
 from datetime import datetime
-from gqlwrap import last_stock, insert_sensor_info, insert_stock_with_sensor_info, fetch_tray_info
+from gqlwrap import last_stock, insert_sensor_info, insert_stock_with_sensor_info, fetch_tray_info, insert_notification
 from sqlite_file import con, cache_stock_info, get_stocks_cached, get_created_at_cached
 from upload_file import upload_file
 from picamera import PiCamera
 from serial_sensor import info_from_sensor
+import time
 
 camera = PiCamera()
 camera.start_preview()
 is_prev_light = True
 
-initial_time = datetime.now()
+initial_time = time.mktime(datetime.now().timetuple())
 tray_id = 1
 
 while True:
-    now = datetime.now()
+    now = time.mktime(datetime.now().timetuple())
 
     (sensor_data, current_light) = info_from_sensor(camera, is_prev_light)
     if (now - initial_time).total_seconds() >= 300:
@@ -34,13 +35,15 @@ while True:
         cache_stock_info(result)
 
         stocks = get_stocks_cached()
-        created_at = get_created_at_cached()
-
-        for created in created_at:
-            if (now - created).day >= 3:
-                print(created) # 임시코드 오래 보관한 식품을 어떻게 처리?? <앱으로 보내느 걸로 알고 있는데 제가 거기까지는 잘 몰라서 애매합니다ㅜㅜ>
 
         for stock in stocks:
             print(stock)
+
+    days = (datetime.fromtimestamp(now)) - (datetime.fromtimestamp(initial_time))
+    if days >= 1:
+        created = get_created_at_cached(now)
+        for i in created:
+            insert_notification(i[0], i[1]) # tray_id, stock_id, difference
+
 
 con.close()

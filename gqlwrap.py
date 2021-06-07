@@ -109,3 +109,27 @@ def insert_sensor_info(stock_id, sensor_data, image_address):
       }
     }
   })
+
+def insert_notification(tray_id, stock_id):
+  mutation=gql("""mutation ($notification: notification_insert_input!) {
+    insert_notification_one(object: $notification){
+      user_id
+      content
+      kind
+      tray_id
+      stock_id
+      view_name_arg
+      route_kind
+    }
+  }""")
+  client.execute(mutation, variable_values={
+    "notification": {
+      "user_id" : 1,
+      "content" : "test",
+      "kind" : "warning",
+      "tray_id" : tray_id,
+      "stock_id" : stock_id,
+      "view_name_arg" : "온도",
+      "route_kind" : "온도"
+    }
+  })

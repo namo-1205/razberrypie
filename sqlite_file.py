@@ -17,7 +17,7 @@ def get_stocks_cached():
   result = cur.fetchall()
   return result
 
-def get_created_at_cached():
-  cur.execute('''SELECT created_at FROM stock1''')
+def get_created_at_cached(now):
+  cur.execute('''SELECT tray_id, id FROM stock1 WHERE JULIANDAY(%d) - JULIANDAY(created_at) >= 3''', now)
   result = cur.fetchall()
   return result
