@@ -44,7 +44,4 @@ while True:
         created = get_created_at_cached(now)
         for i in created:
             insert_notification(i[0], i[1]) # tray_id, stock_id, difference
-
-
-
 con.close()
