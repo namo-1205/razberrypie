@@ -49,7 +49,7 @@ def fetch_tray_info():
   }''')
   return client.execute(query)
 
-def insert_stock_with_sensor_info(stock_name, tray_id, sensor_data):
+def insert_stock_with_sensor_info(stock_name, tray_id, sensor_data, image_address):
   mutation=gql("""mutation($stock: stock_insert_input!){
     insert_stock_one(object: $stock){
       id
@@ -67,12 +67,18 @@ def insert_stock_with_sensor_info(stock_name, tray_id, sensor_data):
       },
       "weights":{
         "data": {
-          "value": sensor_data.weight
+          "value": sensor_data.weight,
+          "images": {
+            "data":{
+              "url": image_address,
+              "number": 1
+            }
+          }
         }
       }
     }
   })
-def insert_sensor_info(stock_id, sensor_data):
+def insert_sensor_info(stock_id, sensor_data, image_address):
   mutation=gql("""mutation ($humdityTemperature: humidity_temperature_insert_input!, $weight: weight_insert_input!) {
     insert_humidity_temperature_one(object: $humdityTemperature){
       stock_id
@@ -94,6 +100,12 @@ def insert_sensor_info(stock_id, sensor_data):
     },
     "weight": {
       "stock_id": stock_id,
-      "value": sensor_data.weight
+      "value": sensor_data.weight,
+      "images": {
+        "data":{
+          "url": image_address,
+          "number": 1
+        }
+      }
     }
   })
