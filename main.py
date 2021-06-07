@@ -13,7 +13,23 @@ initial_time = datetime.now()
 tray_id = 1
 
 while True:
+<<<<<<< Updated upstream
     now = datetime.now()
+=======
+    upload_result = upload_file()
+
+    # Execute the query on the transport
+    stock_name = upload_result['name'] # 재고 이름
+
+    tray_id = receive_tray_id(stock_name)
+
+    # Execute the query on the transport
+
+    new_stock_info(tray_id, stock_name)
+
+    datetime2 = datetime.now()
+
+>>>>>>> Stashed changes
     (sensor_data, current_light) = info_from_sensor(camera, is_prev_light)
     if (now - initial_time).total_seconds() >= 300:
         upload_result = upload_file()
