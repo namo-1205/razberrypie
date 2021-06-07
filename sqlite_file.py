@@ -16,3 +16,8 @@ def get_stocks_cached():
   cur.execute('''SELECT * FROM stock1''')
   result = cur.fetchall()
   return result
+
+def get_created_at_cached():
+  cur.execute('''SELECT created_at FROM stock1''')
+  result = cur.fetchall()
+  return result
