@@ -122,6 +122,7 @@ def insert_notification(tray_id, stock_id):
       route_kind
     }
   }""")
+  
   client.execute(mutation, variable_values={
     "notification": {
       "user_id" : 1,
