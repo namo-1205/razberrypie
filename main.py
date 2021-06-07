@@ -20,12 +20,13 @@ while True:
 
         # Execute the query on the transport
         stock_name = upload_result['name'] # 재고 이름
+        stock_image_address = upload_result['key']
 
         last_stock_on_server = last_stock(tray_id)
         if last_stock_on_server['name'] != stock_name:
-            insert_stock_with_sensor_info(stock_name, tray_id, sensor_data)
+            insert_stock_with_sensor_info(stock_name, tray_id, sensor_data, stock_image_address)
         else:
-            insert_sensor_info(last_stock_on_server['id'], sensor_data)
+            insert_sensor_info(last_stock_on_server['id'], sensor_data, stock_image_address)
         initial_time = datetime.now()
 
         result = fetch_tray_info()
