@@ -10,8 +10,8 @@ cur.execute('''CREATE TABLE IF NOT EXISTS notification_cached (created_at, route
 def cache_stock_info(server_query_result):
   records = [[(stock['created_at'], tray['id'], stock['name'], stock['id']) for stock in tray['stocks']] for tray in server_query_result['tray']]
   records = reduce(lambda till_now, current: till_now + current, records, [])
-  tray_id = set([stock[-3] for stock in records])
-  cur.execute('''DELETE FROM stock1 WHERE tray_id IN ({seq})'''.format(seq=','.join(['?']*len(tray_id))), tray_id)
+  tray_id = set([str(stock[-3]) for stock in records])
+  cur.execute('''DELETE FROM stock1 WHERE tray_id IN ({seq})'''.format(seq=','.join(tray_id)))
   cur.executemany('''INSERT INTO stock1 (created_at, tray_id, name, id) VALUES (?, ?, ?, ?)''', records)
   con.commit()
 
