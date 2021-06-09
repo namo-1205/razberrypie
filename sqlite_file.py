@@ -20,17 +20,17 @@ def get_stocks_cached():
   result = cur.fetchall()
   return result
 
-def get_created_at_cached(now):
-  cur.execute('''SELECT tray_id, id FROM stock1 WHERE JULIANDAY(%d) - JULIANDAY(created_at) >= 3''', now)
+def get_created_at_cached():
+  cur.execute('''SELECT tray_id, id FROM stock1 WHERE JULIANDAY(datetime('now','+9 hours')) - JULIANDAY(created_at) >= 3''')
   result = cur.fetchall()
   return result
 
-def already_notified(time, stock_id, route_kind):
-  cur.execute('''SELECT created_at, route_kind, tray_id, stock_id FROM notification_cached WHERE JULIANDAY(?) - JULIANDAY(created_at) < 1 AND stock_id = ? AND route_kind = ?''', time, stock_id, route_kind)
+def already_notified(stock_id, route_kind):
+  cur.execute('''SELECT created_at, route_kind, tray_id, stock_id FROM notification_cached WHERE JULIANDAY(datetime('now','+9 hours')) - JULIANDAY(created_at) < 1 AND stock_id = ? AND route_kind = ?''', stock_id, route_kind)
   result = cur.fetchall()
   return len(result) > 0
 
-def get_too_old_stocks(now):
-  cur.execute('''SELECT created_at, tray_id, name, id FROM stock1 WHERE JULIANDAY(?) - JULIANDAY(created_at) >= 14''', now)
+def get_too_old_stocks():
+  cur.execute('''SELECT created_at, tray_id, name, id FROM stock1 WHERE JULIANDAY(datetime('now','+9 hours')) - JULIANDAY(created_at) >= 14''')
   result = cur.fetchall()
   return result

@@ -10,11 +10,11 @@ camera = PiCamera()
 camera.start_preview()
 is_prev_light = True
 
-initial_time = time.mktime(datetime.now().timetuple())
+initial_time = datetime.now()
 tray_id = 1
 
 while True:
-    now = time.mktime(datetime.now().timetuple())
+    now = datetime.now()
 
     (sensor_data, current_light) = info_from_sensor(camera, is_prev_light)
     if (now - initial_time).total_seconds() >= 300:
@@ -38,9 +38,9 @@ while True:
 
         for stock in stocks:
             print(stock)
-    too_old_stocks = get_too_old_stocks(now)
+    too_old_stocks = get_too_old_stocks()
     for (_, tray_id, name, stock_id) in too_old_stocks:
-        notified = already_notified(now, stock_id, '저장량')
+        notified = already_notified(stock_id, '저장량')
         if not notified:
             insert_notification(tray_id, stock_id, name, "저장량")
 con.close()
