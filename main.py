@@ -1,6 +1,6 @@
 from datetime import datetime
 from gqlwrap import last_stock, insert_sensor_info, insert_stock_with_sensor_info, fetch_tray_info, insert_notification
-from sqlite_file import con, cache_stock_info, get_stocks_cached, get_created_at_cached
+from sqlite_file import con, cache_stock_info, get_stocks_cached, get_created_at_cached, already_notified, get_too_old_stocks
 from upload_file import upload_file
 from picamera import PiCamera
 from serial_sensor import info_from_sensor
@@ -10,11 +10,11 @@ camera = PiCamera()
 camera.start_preview()
 is_prev_light = True
 
-initial_time = time.mktime(datetime.now().timetuple())
+initial_time = datetime.now()
 tray_id = 1
 
 while True:
-    now = time.mktime(datetime.now().timetuple())
+    now = datetime.now()
 
     (sensor_data, current_light) = info_from_sensor(camera, is_prev_light)
     if (now - initial_time).total_seconds() >= 300:
@@ -38,11 +38,9 @@ while True:
 
         for stock in stocks:
             print(stock)
-
-    days = (datetime.fromtimestamp(now)) - (datetime.fromtimestamp(initial_time))
-    if days >= 1:
-        created = get_created_at_cached(now)
-        for i in created:
-            insert_notification(i[0], i[1]) # tray_id, stock_id, difference
-
+    too_old_stocks = get_too_old_stocks()
+    for (_, tray_id, name, stock_id) in too_old_stocks:
+        notified = already_notified(stock_id, '저장량')
+        if not notified:
+            insert_notification(tray_id, stock_id, name, "저장량")
 con.close()

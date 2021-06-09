@@ -39,7 +39,7 @@ def fetch_tray_info():
       name
       user_id
       order_priority
-      stocks{
+      stocks(order_by: {id: desc}, limit: 1){
         created_at
         tray_id
         name
@@ -110,7 +110,7 @@ def insert_sensor_info(stock_id, sensor_data, image_address):
     }
   })
 
-def insert_notification(tray_id, stock_id):
+def insert_notification(tray_id, stock_id, stock_name, kind):
   mutation=gql("""mutation ($notification: notification_insert_input!) {
     insert_notification_one(object: $notification){
       user_id
@@ -125,11 +125,11 @@ def insert_notification(tray_id, stock_id):
   client.execute(mutation, variable_values={
     "notification": {
       "user_id" : 1,
-      "content" : "test",
+      "content" : "지나치게 오래 된 재고가 있습니다!",
       "kind" : "warning",
       "tray_id" : tray_id,
       "stock_id" : stock_id,
-      "view_name_arg" : "온도",
-      "route_kind" : "온도"
+      "view_name_arg" : stock_name,
+      "route_kind" : kind
     }
   })
